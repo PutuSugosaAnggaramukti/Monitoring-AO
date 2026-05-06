@@ -13,6 +13,7 @@
   "dependencies": {
     "@mdi/font": "^7.4.47",
     "vue": "^3.5.32",
+    "vue-router": "^5.0.6",
     "vuetify": "^4.0.6"
   },
   "devDependencies": {
@@ -28,5 +29,18 @@
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
-  }
+  },
+  "description": "This template should help get you started developing with Vue 3 in Vite.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PutuSugosaAnggaramukti/Monitoring-AO.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PutuSugosaAnggaramukti/Monitoring-AO/issues"
+  },
+  "homepage": "https://github.com/PutuSugosaAnggaramukti/Monitoring-AO#readme"
 }

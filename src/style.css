@@ -5,7 +5,9 @@ html, body, #app {
 }
 
 body {
-  overflow: hidden;
+  overflow-y: auto;
+  background-color: #f5f7fa;
+  font-family: 'Inter', sans-serif;
 }
 
 * {
@@ -15,8 +17,6 @@ body {
 .v-dialog .v-card {
   backdrop-filter: blur(6px);
 }
-
-
 
 .text-black{
   color: #000;

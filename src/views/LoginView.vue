@@ -123,6 +123,9 @@
 
 <script setup>
 import { ref } from 'vue'
+import {useRouter} from 'vue-router'
+
+const router = useRouter()
 
 const username = ref('')
 const password = ref('')
@@ -147,6 +150,7 @@ const handleLogin = async () => {
   setTimeout(() => {
     console.log('Login:', username.value, password.value)
     loading.value = false
+    router.push('/dashboard')
   }, 1500)
 }
 
