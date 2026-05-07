@@ -16,31 +16,35 @@
      <!--FORM -->
      <v-form ref="formRef" @submit.prevent="handleLogin">
 
-        <!-- Username -->
-        <v-text-field
-            v-model="username"
-            label="Username"
-            variant="outlined"
-            bg-color="white"
-            color="primary"
-            rounded="lg"
-            density="comfortable"
-            :rules="[rules.required]"
-            class="mb-3"
-        />
+       <!-- NPP -->
+            <v-text-field
+              v-model="npp"
+              label="NPP"
+              prepend-inner-icon="mdi-card-account-details"
+              variant="outlined"
+              bg-color="white"
+              color="primary"
+              rounded="lg"
+              density="comfortable"
+              :rules="[rules.required]"
+              class="mb-3"
+            />
 
         <!-- Password -->
         <v-text-field
-            v-model="password"
-            :type="showPassword ? 'text' : 'password'"
-            label="Password"
-            variant="outlined"
-            bg-color="white"
-            color="primary"
-            rounded="lg"
-            density="comfortable"
-            :rules="[rules.required]"
-            class="mb-5"
+          v-model="password"
+          :type="showPassword ? 'text' : 'password'"
+          label="Password"
+          prepend-inner-icon="mdi-lock-outline"
+          :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+          @click:append-inner="showPassword = !showPassword"
+          variant="outlined"
+          bg-color="white"
+          color="primary"
+          rounded="lg"
+          density="comfortable"
+          :rules="[rules.required]"
+          class="mb-5"
         />
 
             <!-- Login Button -->
@@ -72,13 +76,18 @@
             Reset Password
             </div>
 
-            <!-- Username -->
+            <!-- NPP -->
             <v-text-field
-            v-model="resetUsername"
-            label="Username"
-            variant="outlined"
-            bg-color="white"
-            class="mb-3"
+              v-model="npp"
+              label="NPP"
+              prepend-inner-icon="mdi-card-account-details"
+              variant="outlined"
+              bg-color="white"
+              color="primary"
+              rounded="lg"
+              density="comfortable"
+              :rules="[rules.required]"
+              class="mb-3"
             />
 
             <!-- Password Baru -->
@@ -127,7 +136,7 @@ import {useRouter} from 'vue-router'
 
 const router = useRouter()
 
-const username = ref('')
+const npp = ref('')
 const password = ref('')
 const loading = ref(false)
 const showPassword = ref(false)
@@ -148,7 +157,7 @@ const handleLogin = async () => {
 
   // simulasi API
   setTimeout(() => {
-    console.log('Login:', username.value, password.value)
+    console.log('Login:', npp.value, password.value)
     loading.value = false
     router.push('/menu')
   }, 1500)
