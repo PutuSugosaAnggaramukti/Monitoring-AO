@@ -125,6 +125,11 @@ const menuItems = computed(() => {
         title: 'Dashboard',
         icon: 'mdi-view-dashboard',
         to: '/dashboard-marketing'
+      },
+      {
+        title: 'Pengaturan Akun',
+        icon: 'mdi-account-cog',
+        to: '/pengaturan-akun'
       }
     ]
   }
@@ -158,6 +163,11 @@ const menuItems = computed(() => {
         title: 'Pelaporan',
         icon: 'mdi-chart-box-outline',
         to: '/pelaporan'
+      },
+      {
+        title: 'Pengaturan Akun',
+        icon: 'mdi-account-cog',
+        to: '/pengaturan-akun'
       }
     ]
   }

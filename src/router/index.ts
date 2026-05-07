@@ -9,6 +9,7 @@ import DashboardPenagihanView from '../views/DashboardPenagihanView.vue'
 import DataNasabahView from '../views/DataNasabahView.vue'
 import DataKunjunganView from '../views/DataKunjunganView.vue'
 import PelaporanView from '../views/PelaporanView.vue'
+import PengaturanAkunView from '../views/PengaturanAkunView.vue'
 
 const routes = [
   {
@@ -56,6 +57,11 @@ const routes = [
     name: 'pelaporan',
     component: PelaporanView,
   },
+  {
+    path: '/pengaturan-akun',
+    name: 'pengaturan-akun',
+    component: PengaturanAkunView,
+    },
 ]
 
 const router = createRouter({
