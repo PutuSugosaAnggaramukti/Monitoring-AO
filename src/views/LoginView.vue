@@ -150,7 +150,7 @@ const handleLogin = async () => {
   setTimeout(() => {
     console.log('Login:', username.value, password.value)
     loading.value = false
-    router.push('/dashboard')
+    router.push('/menu')
   }, 1500)
 }
 
