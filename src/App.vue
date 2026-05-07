@@ -1,30 +1,47 @@
 <template>
   <v-app>
     <v-navigation-drawer 
-      v-if="!isLoginPage" 
-      v-model="drawer" 
-      color="#2d5aa3" 
-      theme="dark"
-      permanent
-    >
-      <v-list class="pa-4">
-        <v-list-item title="AO Bank Bantul" subtitle="Monitoring"></v-list-item>
-      </v-list>
-      
-      <v-divider></v-divider>
-      
-      <v-list nav>
-        <v-list-item 
-          v-for="item in menuItems" 
-          :key="item.title"
-          :prepend-icon="item.icon" 
-          :title="item.title" 
-          :to="item.to" 
-          active-class="bg-white text-primary"
+    v-if="!isLoginPage" 
+    v-model="drawer" 
+    color="#2d5aa3" 
+    theme="dark"
+    permanent
+  >
+    <v-list class="pa-4">
+      <v-list-item title="AO Bank Bantul" subtitle="Monitoring"></v-list-item>
+    </v-list>
+    
+    <v-divider></v-divider>
+    
+    <v-list nav>
+      <v-list-item 
+        v-for="item in menuItems" 
+        :key="item.title"
+        :prepend-icon="item.icon" 
+        :title="item.title" 
+        :to="item.to" 
+        active-class="bg-white text-primary"
+        rounded="lg"
+      />
+    </v-list>
+
+    <!-- LOGOUT BUTTON -->
+    <template v-slot:append>
+      <div class="pa-4">
+        <v-btn
+          block
+          color="white"
+          variant="outlined"
+          prepend-icon="mdi-logout"
           rounded="lg"
-        />
-      </v-list>
-    </v-navigation-drawer>
+          @click="handleLogout"
+        >
+          Logout
+        </v-btn>
+      </div>
+    </template>
+
+  </v-navigation-drawer>
 
     <v-app-bar v-if="!isLoginPage" color="white" elevation="1">
       <v-app-bar-nav-icon color="#2d5aa3" @click="drawer = !drawer" />
@@ -79,23 +96,73 @@ const userRole = computed(() => {
 })
 
 const isLoginPage = computed(() => {
-  return route.path === '/' || route.path === '/menu'
+  return route.path === '/'
 })
 
 const menuItems = computed(() => {
-  const items = [
-    { title: 'Dashboard', icon: 'mdi-view-dashboard', to: '/dashboard' },
-    { title: 'Data Nasabah', icon: 'mdi-account-group', to: '/data-nasabah' },
-  ]
 
-  if (userRole.value === 'PENAGIHAN' || userRole.value === 'ADMINISTRATOR') {
-    items.push(
-      { title: 'Data Kunjungan', icon: 'mdi-map-marker-distance', to: '/data-kunjungan' },
-      { title: 'Pelaporan', icon: 'mdi-chart-box-outline', to: '/pelaporan' }
-    )
+  const role = localStorage.getItem('user_role')
+  const currentPath = route.path
+
+  // =========================
+  // MENU APLIKASI
+  // =========================
+  if (currentPath === '/menu') {
+    return []
   }
 
-  return items
+  // =========================
+  // MARKETING
+  // =========================
+  if (role === 'MARKETING') {
+    return [
+      {
+        title: 'Menu Aplikasi',
+        icon: 'mdi-apps',
+        to: '/menu'
+      },
+      {
+        title: 'Dashboard',
+        icon: 'mdi-view-dashboard',
+        to: '/dashboard-marketing'
+      }
+    ]
+  }
+
+  // =========================
+  // PENAGIHAN
+  // =========================
+  if (role === 'PENAGIHAN') {
+    return [
+      {
+        title: 'Menu Aplikasi',
+        icon: 'mdi-apps',
+        to: '/menu'
+      },
+      {
+        title: 'Dashboard',
+        icon: 'mdi-view-dashboard',
+        to: '/dashboard-penagihan'
+      },
+      {
+        title: 'Data Nasabah',
+        icon: 'mdi-account-group',
+        to: '/data-nasabah'
+      },
+      {
+        title: 'Data Kunjungan',
+        icon: 'mdi-map-marker-distance',
+        to: '/data-kunjungan'
+      },
+      {
+        title: 'Pelaporan',
+        icon: 'mdi-chart-box-outline',
+        to: '/pelaporan'
+      }
+    ]
+  }
+
+  return []
 })
 
 const handleLogout = () => {

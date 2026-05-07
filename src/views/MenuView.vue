@@ -6,19 +6,37 @@
         <p class="text-grey-darken-1">Silakan pilih menu layanan yang ingin Anda akses hari ini</p>
       </v-col>
 
-      <v-col cols="12" sm="5" md="4">
-        <v-card @click="selectMenu('marketing')" hover class="pa-6 text-center rounded-xl elevation-3">
-          <v-icon size="80" color="#2d5aa3" class="mb-4">mdi-bullhorn-outline</v-icon>
-          <h2 class="text-h5 font-weight-bold">Marketing</h2>
-        </v-card>
-      </v-col>
+    <v-col cols="12" md="5">
+      <v-card
+        class="pa-10 rounded-xl text-center cursor-pointer"
+        elevation="2"
+        @click="selectMenu('MARKETING')"
+      >
+        <v-icon size="80" color="primary">
+          mdi-bullhorn
+        </v-icon>
 
-      <v-col cols="12" sm="5" md="4">
-        <v-card @click="selectMenu('penagihan')" hover class="pa-6 text-center rounded-xl elevation-3">
-          <v-icon size="80" color="orange-darken-2" class="mb-4">mdi-cash-register</v-icon>
-          <h2 class="text-h5 font-weight-bold">Penagihan</h2>
-        </v-card>
-      </v-col>
+        <div class="text-h4 font-weight-bold mt-4">
+          Marketing
+        </div>
+      </v-card>
+    </v-col>
+
+    <v-col cols="12" md="5">
+      <v-card
+        class="pa-10 rounded-xl text-center cursor-pointer"
+        elevation="2"
+        @click="selectMenu('PENAGIHAN')"
+      >
+        <v-icon size="80" color="warning">
+          mdi-cash-register
+        </v-icon>
+
+        <div class="text-h4 font-weight-bold mt-4">
+          Penagihan
+        </div>
+      </v-card>
+    </v-col>
     </v-row>
   </v-container>
 </template>
@@ -30,7 +48,12 @@ const router = useRouter()
 
 const selectMenu = (role) => {
   localStorage.setItem('user_role', role)
-  router.push('/dashboard')
+
+  if (role === 'MARKETING') {
+    router.push('/dashboard-marketing')
+  } else if (role === 'PENAGIHAN') {
+    router.push('/dashboard-penagihan')
+  }
 }
 </script>
 

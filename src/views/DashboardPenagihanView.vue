@@ -68,6 +68,119 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <!-- AKTIVITAS TERBARU -->
+    <v-row class="mt-2">
+      <v-col cols="12" md="8">
+        <v-card class="pa-5 rounded-xl elevation-2">
+
+          <div class="d-flex align-center mb-4">
+            <v-icon color="primary" class="mr-2">mdi-history</v-icon>
+            <div class="text-h6 font-weight-bold">
+              Aktivitas Terbaru
+            </div>
+          </div>
+
+          <v-timeline density="compact" align="start">
+
+            <v-timeline-item
+              dot-color="success"
+              size="small"
+            >
+              <div class="font-weight-medium">
+                AO Budi menambahkan hasil kunjungan
+              </div>
+
+              <div class="text-caption text-grey">
+                Nasabah: Bapak Slamet - 5 menit lalu
+              </div>
+            </v-timeline-item>
+
+            <v-timeline-item
+              dot-color="warning"
+              size="small"
+            >
+              <div class="font-weight-medium">
+                AO Rina mengubah status penagihan
+              </div>
+
+              <div class="text-caption text-grey">
+                Menjadi "Janji Bayar" - 12 menit lalu
+              </div>
+            </v-timeline-item>
+
+            <v-timeline-item
+              dot-color="info"
+              size="small"
+            >
+              <div class="font-weight-medium">
+                Data nasabah baru ditambahkan
+              </div>
+
+              <div class="text-caption text-grey">
+                Oleh Admin - 30 menit lalu
+              </div>
+            </v-timeline-item>
+
+            <v-timeline-item
+              dot-color="error"
+              size="small"
+            >
+              <div class="font-weight-medium">
+                Kunjungan gagal dicatat
+              </div>
+
+              <div class="text-caption text-grey">
+                Alamat tidak ditemukan - 1 jam lalu
+              </div>
+            </v-timeline-item>
+
+          </v-timeline>
+
+        </v-card>
+      </v-col>
+
+      <!-- QUICK INFO -->
+      <v-col cols="12" md="4">
+        <v-card class="pa-5 rounded-xl elevation-2 mb-4">
+          <div class="text-subtitle-1 font-weight-bold mb-3">
+            User Online
+          </div>
+
+          <div class="d-flex align-center mb-2">
+            <v-avatar color="success" size="10" class="mr-2"></v-avatar>
+            <span>5 AO sedang aktif</span>
+          </div>
+
+          <div class="d-flex align-center">
+            <v-avatar color="warning" size="10" class="mr-2"></v-avatar>
+            <span>2 AO belum update hari ini</span>
+          </div>
+        </v-card>
+
+        <v-card class="pa-5 rounded-xl elevation-2">
+          <div class="text-subtitle-1 font-weight-bold mb-3">
+            Progress Harian
+          </div>
+
+          <div class="text-caption mb-2">
+            Target kunjungan hari ini
+          </div>
+
+          <v-progress-linear
+            model-value="62"
+            color="primary"
+            height="10"
+            rounded
+          ></v-progress-linear>
+
+          <div class="text-right text-caption mt-1">
+            15 / 24 selesai
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
+
   </v-container>
 </template>
 
