@@ -1,0 +1,56 @@
+{
+  "hash": "fff69294",
+  "configHash": "286064d8",
+  "lockfileHash": "ec528c3a",
+  "browserHash": "13624daf",
+  "optimized": {
+    "vue-router": {
+      "src": "../../node_modules/vue-router/dist/vue-router.js",
+      "file": "vue-router.js",
+      "fileHash": "fd2734c5",
+      "needsInterop": false
+    },
+    "vue": {
+      "src": "../../node_modules/vue/dist/vue.runtime.esm-bundler.js",
+      "file": "vue.js",
+      "fileHash": "8642a2c4",
+      "needsInterop": false
+    },
+    "vuetify": {
+      "src": "../../node_modules/vuetify/lib/framework.js",
+      "file": "vuetify.js",
+      "fileHash": "08e1affe",
+      "needsInterop": false
+    },
+    "vuetify/components": {
+      "src": "../../node_modules/vuetify/lib/components/index.js",
+      "file": "vuetify_components.js",
+      "fileHash": "2a7efe1c",
+      "needsInterop": false
+    },
+    "vuetify/directives": {
+      "src": "../../node_modules/vuetify/lib/directives/index.js",
+      "file": "vuetify_directives.js",
+      "fileHash": "772b126c",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "VTooltip-B-oqDYDR": {
+      "file": "VTooltip-B-oqDYDR.js",
+      "isDynamicEntry": false
+    },
+    "hotkey-parsing-BItyI-Ds": {
+      "file": "hotkey-parsing-BItyI-Ds.js",
+      "isDynamicEntry": false
+    },
+    "theme-1cgfVaxW": {
+      "file": "theme-1cgfVaxW.js",
+      "isDynamicEntry": false
+    },
+    "vue.runtime.esm-bundler-BvoXUmaf": {
+      "file": "vue.runtime.esm-bundler-BvoXUmaf.js",
+      "isDynamicEntry": false
+    }
+  }
+}

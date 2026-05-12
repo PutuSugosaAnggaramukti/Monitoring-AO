@@ -46,13 +46,35 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const selectMenu = (role) => {
-  localStorage.setItem('user_role', role)
+const selectMenu = (role, type = 'ADMIN') => {
 
+  localStorage.setItem('user_role', role)
+  localStorage.setItem('user_type', type)
+
+  // =========================
+  // MARKETING
+  // =========================
   if (role === 'MARKETING') {
-    router.push('/dashboard-marketing')
-  } else if (role === 'PENAGIHAN') {
-    router.push('/dashboard-penagihan')
+
+    if (type === 'ADMIN') {
+      router.push('/dashboard-marketing')
+    } else {
+      router.push('/dashboard-marketing-ao')
+    }
+
+  }
+
+  // =========================
+  // PENAGIHAN
+  // =========================
+  else if (role === 'PENAGIHAN') {
+
+    if (type === 'ADMIN') {
+      router.push('/dashboard-penagihan')
+    } else {
+      router.push('/dashboard-penagihan-ao')
+    }
+
   }
 }
 </script>

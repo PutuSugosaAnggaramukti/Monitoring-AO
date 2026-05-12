@@ -18,9 +18,9 @@
 
        <!-- NPP -->
             <v-text-field
-              v-model="npp"
-              label="NPP"
-              prepend-inner-icon="mdi-card-account-details"
+              v-model="username"
+              label="Username"
+              prepend-inner-icon="mdi-account-outline"
               variant="outlined"
               bg-color="white"
               color="primary"
@@ -76,39 +76,53 @@
             Reset Password
             </div>
 
-            <!-- NPP -->
-            <v-text-field
-              v-model="npp"
-              label="NPP"
-              prepend-inner-icon="mdi-card-account-details"
-              variant="outlined"
-              bg-color="white"
-              color="primary"
-              rounded="lg"
-              density="comfortable"
-              :rules="[rules.required]"
-              class="mb-3"
-            />
+           <!-- Username -->
+              <v-text-field
+                v-model="resetUsername"
+                label="Username"
+                prepend-inner-icon="mdi-account-outline"
+                variant="outlined"
+                bg-color="white"
+                color="primary"
+                rounded="lg"
+                density="comfortable"
+                :rules="[rules.required]"
+                class="mb-3"
+              />
 
-            <!-- Password Baru -->
-            <v-text-field
-            v-model="newPassword"
-            label="Password Baru"
-            type="password"
-            variant="outlined"
-            bg-color="white"
-            class="mb-3"
-            />
+              <!-- Password Baru -->
+              <v-text-field
+                v-model="newPassword"
+                :type="showNewPassword ? 'text' : 'password'"
+                label="Password Baru"
+                prepend-inner-icon="mdi-lock-outline"
+                :append-inner-icon="showNewPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                @click:append-inner="showNewPassword = !showNewPassword"
+                variant="outlined"
+                bg-color="white"
+                color="primary"
+                rounded="lg"
+                density="comfortable"
+                :rules="[rules.required]"
+                class="mb-3"
+              />
 
-            <!-- Konfirmasi Password -->
-            <v-text-field
-            v-model="confirmPassword"
-            label="Konfirmasi Password"
-            type="password"
-            variant="outlined"
-            bg-color="white"
-            class="mb-4"
-            />
+              <!-- Konfirmasi Password -->
+              <v-text-field
+                v-model="confirmPassword"
+                :type="showConfirmPassword ? 'text' : 'password'"
+                label="Konfirmasi Password"
+                prepend-inner-icon="mdi-lock-check-outline"
+                :append-inner-icon="showConfirmPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                @click:append-inner="showConfirmPassword = !showConfirmPassword"
+                variant="outlined"
+                bg-color="white"
+                color="primary"
+                rounded="lg"
+                density="comfortable"
+                :rules="[rules.required]"
+                class="mb-4"
+              />
 
             <!-- Button -->
             <v-btn
@@ -128,17 +142,30 @@
         </v-dialog>
 
   </div>
+
+  <v-snackbar
+    v-model="snackbar"
+    :color="snackbarColor"
+    timeout="3000"
+    location="top"
+  >
+    {{ snackbarText }}
+  </v-snackbar>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import {useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
 
 const router = useRouter()
 
-const npp = ref('')
+const username = ref('')
 const password = ref('')
 const loading = ref(false)
+const snackbar = ref(false)
+const snackbarText = ref('')
+const snackbarColor = ref('error')
 const showPassword = ref(false)
 const formRef = ref(null)
 
@@ -155,12 +182,40 @@ const handleLogin = async () => {
 
   loading.value = true
 
-  // simulasi API
-  setTimeout(() => {
-    console.log('Login:', npp.value, password.value)
+  try {
+
+    const response = await axios.post(
+      'http://127.0.0.1:8000/api/login',
+      {
+        username: username.value,
+        password: password.value
+      }
+    )
+
+    // simpan token
+    localStorage.setItem('token', response.data.token)
+
+    // simpan data user
+    localStorage.setItem('user', JSON.stringify(response.data.user))
+
+    // simpan role
+    localStorage.setItem('user_role', response.data.user.role)
+
     loading.value = false
+
+    // pindah halaman
     router.push('/menu')
-  }, 1500)
+
+  } catch (error) {
+
+    loading.value = false
+
+    snackbarText.value =
+      error.response?.data?.message || 'Login gagal'
+
+    snackbarColor.value = 'error'
+    snackbar.value = true
+  }
 }
 
 // reset form
