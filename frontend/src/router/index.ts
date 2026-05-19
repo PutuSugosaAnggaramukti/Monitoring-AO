@@ -6,10 +6,13 @@ import MenuView from '../views/MenuView.vue'
 import DashboardMarketingView from '../views/DashboardMarketingView.vue'
 import DashboardPenagihanView from '../views/DashboardPenagihanView.vue'
 
+
 import DataNasabahView from '../views/DataNasabahView.vue'
 import DataKunjunganView from '../views/DataKunjunganView.vue'
 import PelaporanView from '../views/PelaporanView.vue'
 import PengaturanAkunView from '../views/PengaturanAkunView.vue'
+import BuatAkunAoView from '../views/BuatAkunAoView.vue'
+import JadwalKunjunganView from '../views/JadwalKunjunganView.vue'
 
 const routes = [
   {
@@ -57,11 +60,23 @@ const routes = [
     name: 'pelaporan',
     component: PelaporanView,
   },
+  
   {
     path: '/pengaturan-akun',
     name: 'pengaturan-akun',
     component: PengaturanAkunView,
-    },
+  },
+
+  {
+    path: '/buat-akun-ao',
+    name: 'buat-akun-ao',
+    component: BuatAkunAoView,
+  },
+  {
+    path: '/jadwal-kunjungan',
+    name: 'jadwal-kunjungan',
+    component: JadwalKunjunganView,
+  }
 ]
 
 const router = createRouter({

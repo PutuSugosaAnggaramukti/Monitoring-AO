@@ -99,17 +99,114 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="showImportData" max-width="500">
-      <v-card class="rounded-xl pa-4">
-        <v-card-title class="text-h5 font-weight-bold text-primary">Import Master Data</v-card-title>
-        <v-card-text>
-          <v-file-input label="Upload File Master" variant="outlined" density="compact" color="primary"></v-file-input>
+   <!-- MODAL IMPORT DATA -->
+    <v-dialog v-model="showImportData" max-width="650">
+      <v-card class="rounded-xl overflow-hidden">
+
+        <!-- HEADER -->
+        <div class="pa-5 bg-primary">
+          <div class="d-flex align-center">
+            <div>
+              <div class="text-h5 font-weight-bold text-white">
+                Import Master Data Nasabah
+              </div>
+
+              <div class="text-body-2 text-blue-lighten-4 mt-1">
+                Upload file Excel / CSV untuk menambahkan data nasabah
+              </div>
+            </div>
+
+            <v-spacer></v-spacer>
+
+            <v-icon size="50" color="white">
+              mdi-file-upload-outline
+            </v-icon>
+          </div>
+        </div>
+
+        <v-card-text class="pa-5">
+
+          <!-- ALERT -->
+          <v-alert
+            type="info"
+            variant="tonal"
+            class="mb-5"
+            border="start"
+          >
+            Format file yang didukung:
+            <strong>.xlsx</strong>,
+            <strong>.xls</strong>,
+            dan
+            <strong>.csv</strong>
+          </v-alert>
+
+          <!-- FILE INPUT -->
+          <v-file-input
+            v-model="importFile"
+            label="Pilih File Master Data"
+            prepend-icon=""
+            prepend-inner-icon="mdi-paperclip"
+            variant="outlined"
+            density="comfortable"
+            color="primary"
+            show-size
+            accept=".xlsx,.xls,.csv"
+            class="rounded-lg"
+          ></v-file-input>
+
+
+         <!-- PREVIEW -->
+          <v-card
+            v-if="importFile"
+            class="mt-5 pa-4 rounded-lg"
+            color="grey-lighten-4"
+            flat
+          >
+            <div class="d-flex align-center">
+
+              <v-icon color="success" class="mr-3">
+                mdi-file-excel
+              </v-icon>
+
+              <div>
+                <div class="font-weight-bold">
+                  {{ importFile.name }}
+                </div>
+
+                <div class="text-caption text-grey">
+                  {{ (importFile.size / 1024).toFixed(2) }} KB
+                </div>
+              </div>
+
+            </div>
+          </v-card>
         </v-card-text>
-        <v-card-actions>
+
+        <v-divider></v-divider>
+
+        <!-- ACTION -->
+        <v-card-actions class="pa-4">
           <v-spacer></v-spacer>
-          <v-btn variant="text" @click="showImportData = false">Batal</v-btn>
-          <v-btn color="primary" variant="flat" class="rounded-lg">Unggah</v-btn>
+
+          <v-btn
+            variant="text"
+            @click="showImportData = false"
+          >
+            Batal
+          </v-btn>
+
+          <v-btn
+            color="primary"
+            variant="flat"
+            class="rounded-lg"
+            prepend-icon="mdi-upload"
+            :loading="loadingImport"
+            @click="handleImport"
+          >
+            Upload Data
+          </v-btn>
         </v-card-actions>
+
       </v-card>
     </v-dialog>
 
@@ -142,21 +239,108 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 
 const search = ref('')
 const activeTab = ref('lancar')
+
+// Kontrol Import Data
+const importFile = ref(null)
+const loadingImport = ref(false)
 
 // Kontrol Modal
 const showExport = ref(false)
 const showImportData = ref(false)
 const showAddNasabah = ref(false)
 
+const handleImport = async () => {
+
+  if (!importFile.value) {
+    alert('Pilih file terlebih dahulu')
+    return
+  }
+
+  try {
+
+    loadingImport.value = true
+
+    const token = localStorage.getItem('token')
+
+    const formData = new FormData()
+
+    formData.append(
+      'file',
+      importFile.value
+    )
+
+    const response = await axios.post(
+
+      'http://127.0.0.1:8000/api/nasabah/import',
+
+      formData,
+
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    )
+
+    alert(response.data.message)
+
+    await getNasabah()
+
+    importFile.value = null
+
+    showImportData.value = false
+
+  } catch (error) {
+
+    console.error(error)
+
+    alert(
+      error.response?.data?.message ||
+      'Import gagal'
+    )
+
+  } finally {
+
+    loadingImport.value = false
+  }
+}
+
+const getNasabah = async () => {
+
+  try {
+
+    const token = localStorage.getItem('token')
+
+    const response = await axios.get(
+      'http://127.0.0.1:8000/api/nasabah',
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+
+    console.log(response.data)
+
+    nasabahItems.value = response.data
+
+  } catch (error) {
+
+    console.error(error)
+  }
+}
+
 const headers = [
   { title: 'No', key: 'no', sortable: false },
   { title: 'Kode', key: 'kode' },
   { title: 'No. Anggota', key: 'no_anggota' },
-  { title: 'Rekening Kredit', key: 'rekening' },
+  { title: 'Rekening Kredit', key: 'rekening_kredit' },
   { title: 'Nama Nasabah', key: 'nama' },
   { title: 'Alamat', key: 'alamat' },
   { title: 'Tgl Pinjam', key: 'tgl_pinjam' },
@@ -165,19 +349,11 @@ const headers = [
   { title: 'Aksi', key: 'actions', sortable: false },
 ]
 
-const nasabahItems = ref([
-  {
-    kode: 'PG.333',
-    no_anggota: '24000527',
-    rekening: '01022024000527',
-    nama: 'A BRILYAN VANDI YANSA',
-    alamat: 'SAMPANGAN MANTUP RT 007 BANGUNTAPAN BANTUL',
-    tgl_pinjam: '2024-02-21',
-    tgl_jt: '2027-02-21',
-    nominal: '50.000.000',
-    status: 'lancar'
-  }
-])
+const nasabahItems = ref([])
+
+onMounted(() => {
+  getNasabah()
+})
 </script>
 
 <style scoped>

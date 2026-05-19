@@ -1,12 +1,13 @@
 <template>
   <v-app>
     <v-navigation-drawer 
-    v-if="!isLoginPage" 
+    v-if="!hideLayout"
     v-model="drawer" 
     color="#2d5aa3" 
     theme="dark"
     permanent
-  >
+    >
+    
     <v-list class="pa-4">
       <v-list-item title="AO Bank Bantul" subtitle="Monitoring"></v-list-item>
     </v-list>
@@ -19,7 +20,8 @@
         :key="item.title"
         :prepend-icon="item.icon" 
         :title="item.title" 
-        :to="item.to" 
+        :to="item.to"
+        exact
         active-class="bg-white text-primary"
         rounded="lg"
       />
@@ -43,7 +45,7 @@
 
   </v-navigation-drawer>
 
-    <v-app-bar v-if="!isLoginPage" color="white" elevation="1">
+    <v-app-bar v-if="!hideLayout" color="white" elevation="1">
       <v-app-bar-nav-icon color="#2d5aa3" @click="drawer = !drawer" />
       <v-app-bar-title class="text-primary font-weight-bold">Monitoring AO</v-app-bar-title>
       
@@ -95,26 +97,26 @@ const userRole = computed(() => {
   return localStorage.getItem('user_role')?.toUpperCase() || 'UMUM'
 })
 
-const isLoginPage = computed(() => {
-  return route.path === '/'
+const hideLayout = computed(() => {
+  return route.path === '/' || route.path === '/menu'
 })
 
 const menuItems = computed(() => {
 
-  const role = localStorage.getItem('user_role')
+  const role = localStorage.getItem('user_role')?.toUpperCase()
   const currentPath = route.path
 
   // =========================
-  // MENU APLIKASI
+  // HALAMAN MENU
   // =========================
   if (currentPath === '/menu') {
     return []
   }
 
   // =========================
-  // MARKETING
+  // MENU ADMIN
   // =========================
-  if (role === 'MARKETING') {
+  if (role === 'ADMIN') {
     return [
       {
         title: 'Menu Aplikasi',
@@ -122,9 +124,29 @@ const menuItems = computed(() => {
         to: '/menu'
       },
       {
-        title: 'Dashboard',
-        icon: 'mdi-view-dashboard',
+        title: 'Dashboard Marketing',
+        icon: 'mdi-bullhorn',
         to: '/dashboard-marketing'
+      },
+      {
+        title: 'Dashboard Penagihan',
+        icon: 'mdi-cash-register',
+        to: '/dashboard-penagihan'
+      },
+      {
+        title: 'Data Nasabah',
+        icon: 'mdi-account-details',
+        to: '/data-nasabah'
+      },
+      {
+        title: 'Pelaporan',
+        icon: 'mdi-chart-box-outline',
+        to: '/pelaporan'
+      },
+      {
+        title: 'Buat Akun Baru AO',
+        icon: 'mdi-account-plus',
+        to: '/buat-akun-ao'
       },
       {
         title: 'Pengaturan Akun',
@@ -135,9 +157,9 @@ const menuItems = computed(() => {
   }
 
   // =========================
-  // PENAGIHAN
+  // MENU AO
   // =========================
-  if (role === 'PENAGIHAN') {
+  if (role === 'AO') {
     return [
       {
         title: 'Menu Aplikasi',
@@ -145,19 +167,19 @@ const menuItems = computed(() => {
         to: '/menu'
       },
       {
-        title: 'Dashboard',
-        icon: 'mdi-view-dashboard',
+        title: 'Dashboard Marketing',
+        icon: 'mdi-bullhorn',
+        to: '/dashboard-marketing'
+      },
+      {
+        title: 'Dashboard Penagihan',
+        icon: 'mdi-cash-register',
         to: '/dashboard-penagihan'
       },
       {
-        title: 'Data Nasabah',
-        icon: 'mdi-account-group',
-        to: '/data-nasabah'
-      },
-      {
-        title: 'Data Kunjungan',
-        icon: 'mdi-map-marker-distance',
-        to: '/data-kunjungan'
+        title: 'Jadwal Kunjungan',
+        icon: 'mdi-calendar-clock',
+        to: '/jadwal-kunjungan'
       },
       {
         title: 'Pelaporan',

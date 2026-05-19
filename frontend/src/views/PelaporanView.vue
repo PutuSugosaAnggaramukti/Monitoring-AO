@@ -1,164 +1,251 @@
 <template>
   <v-container fluid class="pa-6 bg-grey-lighten-4" style="min-height: 100vh;">
+
+    <!-- HEADER -->
     <v-card class="mb-6 pa-6 rounded-xl elevation-2" border>
       <div class="d-flex align-center">
         <div>
-          <h1 class="text-h4 font-weight-bold text-primary mb-1">Pelaporan</h1>
+          <h1 class="text-h4 font-weight-bold text-primary mb-1">
+            Pelaporan Kunjungan
+          </h1>
+
           <p class="text-subtitle-1 text-grey-darken-1 mb-0">
-            Dashboard > <span class="font-weight-bold text-primary">Pelaporan</span>
+            Upload hasil kunjungan AO ke nasabah
           </p>
         </div>
+
         <v-spacer></v-spacer>
-        <v-icon size="64" color="blue-lighten-4">mdi-chart-box-outline</v-icon>
+
+        <v-avatar size="72" color="blue-lighten-5">
+          <v-icon size="40" color="primary">
+            mdi-file-document-edit-outline
+          </v-icon>
+        </v-avatar>
       </div>
     </v-card>
 
-    <v-card class="mb-6 pa-4 rounded-xl elevation-2">
-      <v-row align="center">
-        <v-col cols="12" md="6">
-          <v-btn color="success" prepend-icon="mdi-file-excel" variant="flat" class="rounded-lg">
-            Export Excel (Semua)
-          </v-btn>
-        </v-col>
+    <!-- FORM LAPORAN -->
+    <v-card class="mb-6 pa-6 rounded-xl elevation-2">
+
+      <div class="text-h6 font-weight-bold mb-5">
+        Form Laporan Kunjungan
+      </div>
+
+      <v-row>
+
+        <!-- NO ANGSURAN -->
         <v-col cols="12" md="6">
           <v-text-field
-            v-model="searchGlobal"
-            prepend-inner-icon="mdi-magnify"
-            label="Pencarian Global (AO atau Nasabah)..."
+            v-model="form.no_angsuran"
+            label="No. Angsuran"
             variant="outlined"
-            density="compact"
-            hide-details
-            color="primary"
-            class="rounded-lg"
-          ></v-text-field>
+            prepend-inner-icon="mdi-card-account-details"
+            density="comfortable"
+          />
         </v-col>
+
+        <!-- NAMA NASABAH -->
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model="form.nama_nasabah"
+            label="Nama Nasabah"
+            variant="outlined"
+            prepend-inner-icon="mdi-account"
+            density="comfortable"
+          />
+        </v-col>
+
+        <!-- TANGGAL -->
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model="form.tanggal"
+            type="date"
+            label="Tanggal Kunjungan"
+            variant="outlined"
+            prepend-inner-icon="mdi-calendar"
+            density="comfortable"
+          />
+        </v-col>
+
+        <!-- STATUS -->
+        <v-col cols="12" md="6">
+          <v-select
+            v-model="form.status"
+            :items="statusItems"
+            label="Status Kunjungan"
+            variant="outlined"
+            prepend-inner-icon="mdi-check-circle-outline"
+            density="comfortable"
+          />
+        </v-col>
+
+        <!-- CATATAN -->
+        <v-col cols="12">
+          <v-textarea
+            v-model="form.catatan"
+            label="Catatan Hasil Kunjungan"
+            variant="outlined"
+            rows="4"
+            prepend-inner-icon="mdi-note-text-outline"
+          />
+        </v-col>
+
+        <!-- FOTO -->
+        <v-col cols="12">
+          <v-file-input
+            v-model="form.foto"
+            label="Upload Foto Kunjungan"
+            variant="outlined"
+            prepend-icon=""
+            prepend-inner-icon="mdi-camera"
+            accept="image/*"
+            show-size
+          />
+        </v-col>
+
       </v-row>
-    </v-card>
 
-    <v-card class="mb-6 rounded-xl elevation-2 overflow-hidden">
-      <v-card-title class="pa-4 font-weight-bold text-grey-darken-3 d-flex align-center">
-        <v-icon start color="primary">mdi-account-clock</v-icon>
-        Daftar AO Aktif Berkunjung
-      </v-card-title>
-      <v-data-table
-        :headers="headersAO"
-        :items="itemsAO"
-        :search="searchGlobal"
-        class="custom-table"
-        hover
-      >
-        <template v-slot:item.no="{ index }">
-          {{ index + 1 }}
-        </template>
-        <template v-slot:item.nama="{ value }">
-          <span class="font-weight-bold text-primary">{{ value }}</span>
-        </template>
-      </v-data-table>
-    </v-card>
-
-    <v-card class="rounded-xl elevation-2 overflow-hidden">
-      <v-toolbar color="white" flat class="px-4 pt-2">
-        <v-toolbar-title class="text-subtitle-1 font-weight-bold text-grey-darken-3">
-          <v-icon start color="success">mdi-home-check</v-icon>
-          Daftar Nasabah Sudah Dikunjungi
-        </v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-text-field
-          v-model="searchNasabah"
-          prepend-inner-icon="mdi-account-search"
-          label="Cari No. Angsuran / Nama Nasabah..."
-          variant="outlined"
-          density="compact"
-          hide-details
-          single-line
-          color="success"
-          style="max-width: 300px;"
+      <!-- BUTTON -->
+      <div class="d-flex justify-end mt-4">
+        <v-btn
+          color="primary"
+          size="large"
+          prepend-icon="mdi-content-save"
           class="rounded-lg"
-        ></v-text-field>
+          @click="submitLaporan"
+        >
+          Simpan Laporan
+        </v-btn>
+      </div>
+
+    </v-card>
+
+    <!-- RIWAYAT -->
+    <v-card class="rounded-xl elevation-2 overflow-hidden">
+
+      <v-toolbar flat color="white" class="px-4">
+        <v-toolbar-title class="font-weight-bold">
+          <v-icon start color="primary">
+            mdi-history
+          </v-icon>
+          Riwayat Kunjungan
+        </v-toolbar-title>
+
+        <v-spacer></v-spacer>
+
+        <v-text-field
+          v-model="search"
+          prepend-inner-icon="mdi-magnify"
+          label="Cari laporan..."
+          density="compact"
+          variant="outlined"
+          hide-details
+          style="max-width: 300px;"
+        />
       </v-toolbar>
-      
+
       <v-data-table
-        :headers="headersNasabah"
-        :items="itemsNasabah"
-        :search="searchNasabah || searchGlobal"
-        class="custom-table"
+        :headers="headers"
+        :items="items"
+        :search="search"
         hover
       >
+
         <template v-slot:item.no="{ index }">
           {{ index + 1 }}
         </template>
-        <template v-slot:item.ao_visit="{ item }">
-          <v-chip size="small" color="success" variant="flat" class="font-weight-bold">
-            <v-icon start size="14">mdi-account-tie</v-icon>
-            ({{ item.kode_ao }}) {{ item.nama_ao }}
+
+        <template v-slot:item.status="{ value }">
+          <v-chip
+            :color="getStatusColor(value)"
+            size="small"
+            variant="flat"
+          >
+            {{ value }}
           </v-chip>
         </template>
-        <template v-slot:item.tgl_kunjungan="{ value }">
-          <span class="text-grey-darken-2 font-weight-medium">{{ value }}</span>
+
+        <template v-slot:item.foto>
+          <v-btn
+            size="small"
+            color="info"
+            variant="tonal"
+          >
+            Lihat Foto
+          </v-btn>
         </template>
+
       </v-data-table>
+
     </v-card>
+
   </v-container>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 
-const searchGlobal = ref('')
-const searchNasabah = ref('')
+const search = ref('')
 
-const headersAO = [
-  { title: 'NO', key: 'no', width: '70px', sortable: false },
-  { title: 'TANGGAL KUNJUNGI TERAKHIR', key: 'tgl_terakhir', align: 'start' },
-  { title: 'KODE AO', key: 'kode_ao', align: 'start' },
-  { title: 'NAMA AO', key: 'nama', align: 'start' },
+const statusItems = [
+  'Berhasil Dikunjungi',
+  'Tidak Bertemu',
+  'Menolak',
+  'Perlu Follow Up'
 ]
 
-const headersNasabah = [
-  { title: 'NO', key: 'no', width: '70px', sortable: false },
-  { title: 'NO. ANGSURAN', key: 'no_angsuran', align: 'start' },
-  { title: 'NAMA NASABAH', key: 'nama_nasabah', align: 'start' },
-  { title: 'DIKUNJUNGI OLEH (AO)', key: 'ao_visit', align: 'start' },
-  { title: 'TGL KUNJUNGAN', key: 'tgl_kunjungan', align: 'center' },
+const form = ref({
+  no_angsuran: '',
+  nama_nasabah: '',
+  tanggal: '',
+  status: '',
+  catatan: '',
+  foto: null
+})
+
+const headers = [
+  { title: 'NO', key: 'no', sortable: false },
+  { title: 'NO ANGSURAN', key: 'no_angsuran' },
+  { title: 'NAMA NASABAH', key: 'nama_nasabah' },
+  { title: 'TANGGAL', key: 'tanggal' },
+  { title: 'STATUS', key: 'status' },
+  { title: 'FOTO', key: 'foto', sortable: false }
 ]
 
-// Data Dummy
-const itemsAO = ref([
-  { tgl_terakhir: '05-05-2026', kode_ao: 'C-011', nama: 'Wahyu Nugroho' },
-  { tgl_terakhir: '06-05-2026', kode_ao: 'C-004', nama: 'Tri Suryana' },
-  { tgl_terakhir: '07-05-2026', kode_ao: 'C-006', nama: 'Fajar Setyahartadi' },
+const items = ref([
+  {
+    no_angsuran: '240001',
+    nama_nasabah: 'Budi Santoso',
+    tanggal: '2026-05-19',
+    status: 'Berhasil Dikunjungi'
+  },
+  {
+    no_angsuran: '240002',
+    nama_nasabah: 'Siti Aminah',
+    tanggal: '2026-05-18',
+    status: 'Perlu Follow Up'
+  }
 ])
 
-const itemsNasabah = ref([
-  { 
-    no_angsuran: '20000228', 
-    nama_nasabah: 'EKO SUTRISNO AJI', 
-    kode_ao: 'C-011', 
-    nama_ao: 'Wahyu Nugroho', 
-    tgl_kunjungan: '05-05-2026' 
-  },
-  { 
-    no_angsuran: '24000527', 
-    nama_nasabah: 'A BRILYAN VANDI YANSA', 
-    kode_ao: 'C-004', 
-    nama_ao: 'Tri Suryana', 
-    tgl_kunjungan: '06-05-2026' 
-  },
-])
+const getStatusColor = (status) => {
+  if (status === 'Berhasil Dikunjungi') return 'success'
+  if (status === 'Tidak Bertemu') return 'warning'
+  if (status === 'Menolak') return 'error'
+  return 'info'
+}
+
+const submitLaporan = () => {
+  console.log(form.value)
+
+  alert('Laporan berhasil disimpan')
+
+  form.value = {
+    no_angsuran: '',
+    nama_nasabah: '',
+    tanggal: '',
+    status: '',
+    catatan: '',
+    foto: null
+  }
+}
 </script>
-
-<style scoped>
-.custom-table :deep(thead) {
-  background-color: #f8fafc !important;
-}
-.custom-table :deep(th) {
-  font-weight: 700 !important;
-  color: #475569 !important;
-  text-transform: uppercase;
-  font-size: 11px !important;
-  letter-spacing: 0.5px;
-}
-.custom-table :deep(td) {
-  height: 52px !important;
-}
-</style>
