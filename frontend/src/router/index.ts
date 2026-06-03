@@ -13,6 +13,7 @@ import PelaporanView from '../views/PelaporanView.vue'
 import PengaturanAkunView from '../views/PengaturanAkunView.vue'
 import BuatAkunAoView from '../views/BuatAkunAoView.vue'
 import JadwalKunjunganView from '../views/JadwalKunjunganView.vue'
+import PelaporanNasabahLama from '../views/PelaporanNasabahLamaView.vue'
 
 const routes = [
   {
@@ -76,6 +77,11 @@ const routes = [
     path: '/jadwal-kunjungan',
     name: 'jadwal-kunjungan',
     component: JadwalKunjunganView,
+  },
+  {
+    path: '/pelaporan-nasabah-lama',
+    name: 'pelaporan-nasabah-lama',
+    component: PelaporanNasabahLama,
   }
 ]
 

@@ -23,7 +23,7 @@
           elevation="2"
           @click="selectMenu('PENAGIHAN')"
         >
-          <v-icon size="80" color="warning">mdi-cash-register</v-icon>
+          <v-icon size="80" color="warning">mdi-wallet</v-icon>
           <div class="text-h4 font-weight-bold mt-4">Penagihan</div>
         </v-card>
       </v-col>

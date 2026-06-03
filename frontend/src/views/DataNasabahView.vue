@@ -67,7 +67,7 @@
     <v-card class="rounded-xl elevation-2 overflow-hidden">
       <v-data-table
         :headers="headers"
-        :items="nasabahItems" 
+        :items="filteredNasabah"
         :search="search"
         hover
         class="text-no-wrap custom-table"
@@ -239,7 +239,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 
 const search = ref('')
@@ -248,6 +248,15 @@ const activeTab = ref('lancar')
 // Kontrol Import Data
 const importFile = ref(null)
 const loadingImport = ref(false)
+const filteredNasabah = computed(() => {
+
+  return nasabahItems.value.filter(item => {
+
+    return item.status === activeTab.value
+
+  })
+
+})
 
 // Kontrol Modal
 const showExport = ref(false)
@@ -328,7 +337,7 @@ const getNasabah = async () => {
 
     console.log(response.data)
 
-    nasabahItems.value = response.data
+    nasabahItems.value = response.data.data || []
 
   } catch (error) {
 

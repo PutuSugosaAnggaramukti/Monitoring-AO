@@ -9,7 +9,10 @@
     >
     
     <v-list class="pa-4">
-      <v-list-item title="AO Bank Bantul" subtitle="Monitoring"></v-list-item>
+      <v-list-item
+        :title="userName"
+        :subtitle="sidebarSubtitle"
+      />
     </v-list>
     
     <v-divider></v-divider>
@@ -62,10 +65,10 @@
         
         <v-card class="mt-2 pa-2 rounded-lg">
           <v-list>
-            <v-list-item
-              title="Administrator"
-              subtitle="AO Bank Bantul"
-            />
+            <v-list-item 
+              :title="userName"
+              :subtitle="`${userRole} Monitoring`">
+            </v-list-item>
             <v-divider class="my-2"></v-divider>
             <v-list-item 
               link 
@@ -93,8 +96,24 @@ const drawer = ref(true)
 const route = useRoute()
 const router = useRouter() 
 
+const userData = computed(() => {
+  return JSON.parse(localStorage.getItem('user') || '{}')
+})
+
+const userName = computed(() => {
+  return userData.value.name || 'User'
+})
+
 const userRole = computed(() => {
-  return localStorage.getItem('user_role')?.toUpperCase() || 'UMUM'
+  return userData.value.role || 'AO'
+})
+
+const userWilayah = computed(() => {
+  return userData.value.wilayah || '-'
+})
+
+const sidebarSubtitle = computed(() => {
+  return `AO ${userWilayah.value}`
 })
 
 const hideLayout = computed(() => {
@@ -130,18 +149,13 @@ const menuItems = computed(() => {
       },
       {
         title: 'Dashboard Penagihan',
-        icon: 'mdi-cash-register',
+        icon: 'mdi-wallet',
         to: '/dashboard-penagihan'
       },
       {
         title: 'Data Nasabah',
         icon: 'mdi-account-details',
         to: '/data-nasabah'
-      },
-      {
-        title: 'Pelaporan',
-        icon: 'mdi-chart-box-outline',
-        to: '/pelaporan'
       },
       {
         title: 'Buat Akun Baru AO',
@@ -160,38 +174,72 @@ const menuItems = computed(() => {
   // MENU AO
   // =========================
   if (role === 'AO') {
-    return [
-      {
-        title: 'Menu Aplikasi',
-        icon: 'mdi-apps',
-        to: '/menu'
-      },
-      {
-        title: 'Dashboard Marketing',
-        icon: 'mdi-bullhorn',
-        to: '/dashboard-marketing'
-      },
-      {
-        title: 'Dashboard Penagihan',
-        icon: 'mdi-cash-register',
-        to: '/dashboard-penagihan'
-      },
-      {
-        title: 'Jadwal Kunjungan',
-        icon: 'mdi-calendar-clock',
-        to: '/jadwal-kunjungan'
-      },
-      {
-        title: 'Pelaporan',
-        icon: 'mdi-chart-box-outline',
-        to: '/pelaporan'
-      },
-      {
-        title: 'Pengaturan Akun',
-        icon: 'mdi-account-cog',
-        to: '/pengaturan-akun'
-      }
-    ]
+
+    const isMarketing =
+      currentPath.startsWith('/dashboard-marketing') ||
+      currentPath === '/pelaporan' ||
+      currentPath === '/pelaporan-nasabah-lama' ||
+      currentPath === '/jadwal-kunjungan'
+
+    const isPenagihan =
+      currentPath.startsWith('/dashboard-penagihan')
+
+    // MARKETING menus
+    if (isMarketing) {
+      return [
+        {
+          title: 'Menu Aplikasi',
+          icon: 'mdi-apps',
+          to: '/menu'
+        },
+        {
+          title: 'Dashboard Marketing',
+          icon: 'mdi-bullhorn',
+          to: '/dashboard-marketing'
+        },
+        {
+          title: 'Jadwal Kunjungan',
+          icon: 'mdi-calendar-clock',
+          to: '/jadwal-kunjungan'
+        },
+        {
+          title: 'LapKun Nasabah Baru',
+          icon: 'mdi-account-plus-outline',
+          to: '/pelaporan'
+        },
+        {
+          title: 'LapKun Nasabah Lama',
+          icon: 'mdi-account-clock-outline',
+          to: '/pelaporan-nasabah-lama'
+        },
+        {
+          title: 'Pengaturan Akun',
+          icon: 'mdi-account-cog',
+          to: '/pengaturan-akun'
+        }
+      ]
+    }
+
+    // PENAGIHAN menus
+    if (isPenagihan) {
+      return [
+        {
+          title: 'Menu Aplikasi',
+          icon: 'mdi-apps',
+          to: '/menu'
+        },
+        {
+          title: 'Dashboard Penagihan',
+          icon: 'mdi-wallet',
+          to: '/dashboard-penagihan'
+        },
+        {
+          title: 'Pengaturan Akun',
+          icon: 'mdi-account-cog',
+          to: '/pengaturan-akun'
+        }
+      ]
+    }
   }
 
   return []

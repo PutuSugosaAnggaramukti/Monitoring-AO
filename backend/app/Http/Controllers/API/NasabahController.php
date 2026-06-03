@@ -71,13 +71,16 @@ class NasabahController extends Controller
             $query->where(function ($q) use ($request) {
 
                 $q->where('nama', 'like', '%' . $request->search . '%')
-                  ->orWhere('rekening_kredit', 'like', '%' . $request->search . '%')
-                  ->orWhere('no_anggota', 'like', '%' . $request->search . '%');
+                ->orWhere('rekening_kredit', 'like', '%' . $request->search . '%')
+                ->orWhere('no_anggota', 'like', '%' . $request->search . '%');
             });
         }
 
-        return response()->json(
-            $query->latest()->get()
-        );
+        $nasabah = $query->latest()->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $nasabah
+        ]);
     }
 }

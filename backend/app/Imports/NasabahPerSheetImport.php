@@ -22,15 +22,23 @@ class NasabahPerSheetImport implements ToCollection, WithChunkReading
     {
         foreach ($rows as $index => $row) {
 
-            // Skip header
-            if ($index == 0) {
-                continue;
-            }
+              // Skip row kosong
+                if ($row->filter()->isEmpty()) {
+                    continue;
+                }
 
-            // Skip jika rekening kosong
-            if (empty($row[3])) {
-                continue;
-            }
+                // Skip header tabel
+                if (
+                    str_contains(strtolower($row[1] ?? ''), 'kode') ||
+                    str_contains(strtolower($row[3] ?? ''), 'rekening')
+                ) {
+                    continue;
+                }
+
+                // Skip jika rekening kosong
+                if (empty($row[3])) {
+                    continue;
+                }
 
             Nasabah::create([
 
@@ -154,11 +162,11 @@ class NasabahPerSheetImport implements ToCollection, WithChunkReading
     {
         try {
 
-            if (!$value) {
+            if (empty($value)) {
                 return null;
             }
 
-            // Jika format numeric excel
+            // Jika numeric Excel serial date
             if (is_numeric($value)) {
 
                 return Carbon::instance(
@@ -166,10 +174,42 @@ class NasabahPerSheetImport implements ToCollection, WithChunkReading
                 )->format('Y-m-d');
             }
 
-            // Jika format string tanggal biasa
-            return Carbon::parse($value)->format('Y-m-d');
+            // Bersihkan spasi
+            $value = trim($value);
+
+            // Format umum Indonesia
+            $formats = [
+                'd/m/Y',
+                'd-m-Y',
+                'Y-m-d',
+                'm/d/Y',
+                'd/m/y',
+                'd-m-y',
+            ];
+
+            foreach ($formats as $format) {
+
+                try {
+
+                    return Carbon::createFromFormat(
+                        $format,
+                        $value
+                    )->format('Y-m-d');
+
+                } catch (\Exception $e) {
+                    // lanjut format berikutnya
+                }
+            }
+
+            // fallback otomatis Carbon
+            return Carbon::parse($value)
+                ->format('Y-m-d');
 
         } catch (\Exception $e) {
+
+            \Log::warning('Tanggal gagal parse', [
+                'value' => $value
+            ]);
 
             return null;
         }

@@ -69,4 +69,10 @@ class Nasabah extends Model
         // STATUS
         'status',
     ];
+
+    public function laporanKunjungan()
+    {
+        return $this->hasMany(LaporanKunjungan::class);
+    }
+
 }
